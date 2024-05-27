@@ -1,30 +1,35 @@
 package org.example.webapitableau.controller;
 
-import org.example.webapitableau.models.Product;
+import org.example.webapitableau.models.Recipe;
+import org.example.webapitableau.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.example.webapitableau.api.ProductsApi;
+import org.example.webapitableau.api.UserApi;
+import org.example.webapitableau.api.RecipesApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class ControllerForDummies implements ProductsApi{
+public class ControllerForDummies implements RecipesApi{
+
     @Override
-    public ResponseEntity<List<Product>> productsGet() {
-        List <Product> list = new ArrayList<Product>();
-        Product pr = new Product();
-        pr.setCategory("Store");
-        pr.setId(1L);
-        pr.setName("Dishwasher");
-        pr.setPrice(200.0);
-        list.add(pr);
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    public ResponseEntity<List<Recipe>> getrecipelist() {
+        List<Recipe> recipes = new ArrayList<>();
+        Recipe recipe = new Recipe();
+        recipe.setTitle("Quark");
+        recipe.setCreatedby("User 1");
+        recipe.setIngredients("Quark");
+        recipe.setPicture("pictures/quark.png");
+        recipe.setPreparation("Quark kaufen");
+        recipe.setShortsummary("Wie man Quark macht.");
+        recipes.add(recipe);
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> productsPost(Product body) {
+    public ResponseEntity<Void> postrecipe(Recipe body) {
         return null;
     }
 }

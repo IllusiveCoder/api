@@ -2,49 +2,106 @@ openapi: 3.0.3
 info:
   title: Webtableau API
   description: |-
-    An e-commerce API that allows various operations related to products, categories, and shopping carts.
+    An API that allows various operations related to receiving and sending data of recipe instructions.
   version: 0.1-TEST
 servers:
-  - url: https://testenvironment.org/api/v1
-  - url: https://prodenvironment.org/api/v1
+  - url: http://localhost:8080
 tags:
-  - name: products
-    description: Operations related to products
-  - name: categories
-    description: Operations related to product categories
-  - name: cart
-    description: Operations related to shopping carts
+  - name: getrecipedata
+    description: Operations related to receive recipe data.
+  - name: postrecipedata
+    description: Operations related to post recipe data.
+  - name: getuserdata
+    description: Operations related to receive user data.
+  - name: postuserdata
+    description: Operations related to posting user data.
 paths:
-  /products:
+  /recipes:
     get:
-      summary: Get a list of products
+      summary: Get a list of recipes.
+      tags:
+      - getrecipedata
+      operationId: getrecipelist
       responses:
         '200':
-          description: Audit scores data
+          description: List of all available recipes.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: '#/components/schemas/Recipe'
     post:
-      summary: Add a product to the store
+      summary: Add a recipe to the database.
+      tags:
+        - postrecipedata
+      operationId: postrecipe
       requestBody:
-        description: Product details
+        description: Add a new recipe.
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/Recipe'
       responses:
         '201':
-          description: Created product
+          description: Added recipe to the database.
         '400':
-          description: Product already exists
+          description: Something went wrong.
+
+  /user:
+    get:
+      summary: Get a list of searched users.
+      tags:
+        - getuserdata
+      operationId: getusers
+      responses:
+        '200':
+          description: List of all searched users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Add a new user to the database.
+      tags:
+        - postuserdata
+      operationId: postuser
+      requestBody:
+        description: Add a new recipe.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Add a new user to the database.
+        '400':
+          description: Something went wrong.
+
 
 components:
   schemas:
-    Product:
+    Recipe:
+      type: object
+      properties:
+        title:
+          type: string
+          format: string
+        createdby:
+          type: string
+        shortsummary:
+          type: string
+        preparation:
+          type: string
+        ingredients:
+          type: string
+        picture:
+          type: string
+    User:
       type: object
       properties:
         id:
@@ -53,8 +110,7 @@ components:
           readOnly: true
         name:
           type: string
-        price:
-          type: number
-          format: double
-        category:
+        username:
+          type: string
+        profilepicture:
           type: string
