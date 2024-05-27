@@ -1,0 +1,60 @@
+openapi: 3.0.3
+info:
+  title: Webtableau API
+  description: |-
+    An e-commerce API that allows various operations related to products, categories, and shopping carts.
+  version: 0.1-TEST
+servers:
+  - url: https://testenvironment.org/api/v1
+  - url: https://prodenvironment.org/api/v1
+tags:
+  - name: products
+    description: Operations related to products
+  - name: categories
+    description: Operations related to product categories
+  - name: cart
+    description: Operations related to shopping carts
+paths:
+  /products:
+    get:
+      summary: Get a list of products
+      responses:
+        '200':
+          description: Audit scores data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      summary: Add a product to the store
+      requestBody:
+        description: Product details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Created product
+        '400':
+          description: Product already exists
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        category:
+          type: string
