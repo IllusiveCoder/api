@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class ControllerForDummies implements RecipesApi{
+public class ApiController implements RecipesApi, UserApi{
 
     @Override
     public ResponseEntity<List<Recipe>> getrecipelist() {
@@ -30,6 +30,16 @@ public class ControllerForDummies implements RecipesApi{
 
     @Override
     public ResponseEntity<Void> postrecipe(Recipe body) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<User>> getusers() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> postuser(User body) {
         return null;
     }
 }
