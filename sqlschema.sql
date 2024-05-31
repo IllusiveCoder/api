@@ -1,0 +1,16 @@
+CREATE DATABASE testdb;
+
+USE testdb;
+
+CREATE TABLE User(
+
+id INT NOT NULL PRIMARY KEY);
+
+CREATE TABLE Recipe(
+
+id INT NOT NULL PRIMARY KEY);
+
+CREATE TABLE PaginatedRecipes(
+
+id INT NOT NULL PRIMARY KEY);
+
