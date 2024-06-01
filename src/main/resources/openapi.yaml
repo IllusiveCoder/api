@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Webtableau API
-  description: |-
+  description:
     An API that allows various operations related to receiving and sending data of recipe instructions.
   version: 0.1-TEST
 servers:
@@ -11,6 +11,8 @@ tags:
     description: Operations related to receive recipe data.
   - name: postrecipedata
     description: Operations related to post recipe data.
+  - name: putrecipedata
+    description: Operations related to update recipe data.
   - name: getuserdata
     description: Operations related to receive user data.
   - name: postuserdata
@@ -22,9 +24,16 @@ paths:
       tags:
         - getrecipedata
       operationId: getrecipe
+      parameters:
+        - in: query
+          name: id
+          description: Loading recipe.
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
-          description: List of all available recipes.
+          description: Search for specific recipe.
           content:
             application/json:
               schema:
@@ -48,41 +57,33 @@ paths:
           description: Added recipe to the database.
         '400':
           description: Something went wrong.
-
-  /user:
-    get:
-      summary: Get a list of searched users.
+    put:
+      summary: Update a recipe.
       tags:
-        - getuserdata
-      operationId: getusers
-      responses:
-        '200':
-          description: List of all searched users.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-    post:
-      summary: Add a new user to the database.
-      tags:
-        - postuserdata
-      operationId: postuser
+        - putrecipedata
+      operationId: putrecipe
+      parameters:
+        - in: query
+          name: id
+          description: Loading recipe.
+          required: true
+          schema:
+            type: integer
       requestBody:
-        description: Add a new user.
+        description: Add a new recipe.
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Recipe'
       responses:
-        '201':
-          description: Add a new user to the database.
-        '400':
-          description: Something went wrong.
+          '201':
+            description: Added recipe to the database.
+          '400':
+            description: Something went wrong.
 
-  /recipes:
+
+  /recipe/page:
     get:
       summary: Get a list of all recipes.
       tags:
@@ -90,20 +91,26 @@ paths:
       operationId: getrecipes
       x-spring-paginated: true
       parameters:
-        - name: page
-          in: query
+        - in: query
+          name: page
           description: The page number to retrieve.
           required: false
           schema:
             type: integer
             default: 1
-        - name: size
-          in: query
+        - in: query
+          name: size
           description: The number of items per page.
           required: false
           schema:
             type: integer
             default: 10
+        - in: query
+          name: title
+          description: A title or text someone is looking for.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: List of all available recipes.
@@ -111,23 +118,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedRecipes'
-    post:
-      summary: Add recipes to the database.
-      tags:
-        - postrecipedata
-      operationId: postrecipes
-      requestBody:
-        description: Add new recipes.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Recipe'
-      responses:
-        '201':
-          description: Added recipes to the database.
-        '400':
-          description: Something went wrong.
 
 components:
   schemas:
@@ -146,6 +136,15 @@ components:
           type: string
         picture:
           type: string
+    RecipeShort:
+        type: object
+        properties:
+          title:
+            type: string
+          shortsummary:
+            type: string
+          pictures:
+            type: string
     User:
       type: object
       properties:
@@ -173,7 +172,7 @@ components:
         recipes:
           type: array
           items:
-            $ref: '#/components/schemas/Recipe'
+            $ref: '#/components/schemas/RecipeShort'
 
 
 
