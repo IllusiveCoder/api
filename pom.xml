@@ -8,6 +8,7 @@
         <version>3.3.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <packaging>war</packaging>
     <groupId>org.example</groupId>
     <artifactId>webapitableau</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -36,6 +37,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
@@ -98,6 +104,7 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>WebApiTableau</finalName>
     </build>
 
 </project>
