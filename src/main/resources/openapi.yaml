@@ -141,6 +141,8 @@ components:
     RecipeShort:
         type: object
         properties:
+          id:
+            type: integer
           title:
             type: string
           shortsummary:
