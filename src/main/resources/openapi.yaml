@@ -149,7 +149,7 @@ components:
             type: string
           shortsummary:
             type: string
-          pictures:
+          picture:
             type: string
     User:
       type: object
