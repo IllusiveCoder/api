@@ -3,6 +3,7 @@ package org.example.webapitableau.controller;
 import org.example.webapitableau.api.RecipeApi;
 import org.example.webapitableau.models.PaginatedRecipes;
 import org.example.webapitableau.models.Recipe;
+import org.example.webapitableau.models.RecipeEntity;
 import org.example.webapitableau.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -26,14 +27,16 @@ public class ApiController implements RecipeApi {
     @Override
     public ResponseEntity<List<Recipe>> getrecipe(@RequestParam Integer id) {
         List <Recipe> recipeList = new ArrayList<Recipe>();
-        recipeList.add(recipeService.getRecipe(id));
+        Recipe recipe = recipeService.getRecipe(id);
+        recipeList.add(recipe);
         return new ResponseEntity<>(recipeList, HttpStatus.OK);
 
     }
 
     @Override
-    public ResponseEntity<PaginatedRecipes> getrecipepage(Integer page, Integer size, String title) {
-        return new ResponseEntity<>(recipeService.page(page,size,title), HttpStatus.OK);
+    public ResponseEntity<PaginatedRecipes> getrecipepage(Integer page, Integer size, @RequestParam String title) {
+        PaginatedRecipes paginatedRecipes = recipeService.page(title);
+        return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
     }
 
     @Override
