@@ -136,6 +136,8 @@ components:
           type: string
         ingredients:
           type: string
+        bakingtime:
+          type: integer
         picture:
           type: string
     RecipeShort:
