@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class RecipeService {
 
@@ -36,6 +39,7 @@ public class RecipeService {
                     oldrecipe.setIngredients(updatedrecipe.getIngredients());
                     oldrecipe.setPreparation(updatedrecipe.getPreparation());
                     oldrecipe.setPicture(updatedrecipe.getPicture());
+                    oldrecipe.setBakingtime(updatedrecipe.getBakingtime());
 
                     return recipeRepository.save(oldrecipe);
                 })
@@ -47,7 +51,8 @@ public class RecipeService {
 
     }
 
-    public PaginatedRecipes page(Integer page, Integer size, String title) {
+    public PaginatedRecipes page(String title) {
+        
         return null;
     }
 }

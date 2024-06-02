@@ -11,13 +11,21 @@ public class RecipeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String createdby;
     private String shortsummary;
     private String preparation;
     private String ingredients;
+    private Integer bakingtime;
     private String picture;
+
+    public Integer getBakingtime() {
+        return bakingtime;
+    }
+
+    public void setBakingtime(Integer bakingtime) {
+        this.bakingtime = bakingtime;
+    }
 
     // Getters and Setters
     public Long getId() {
