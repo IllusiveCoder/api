@@ -88,7 +88,7 @@ paths:
       summary: Get a list of all recipes.
       tags:
         - getrecipedata
-      operationId: getrecipes
+      operationId: getrecipepage
       x-spring-paginated: true
       parameters:
         - in: query
@@ -124,6 +124,8 @@ components:
     Recipe:
       type: object
       properties:
+        id:
+          type: integer
         title:
           type: string
         createdby:
