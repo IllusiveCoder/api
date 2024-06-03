@@ -35,9 +35,8 @@ public class ApiController implements RecipeApi {
 
     @Override
     public ResponseEntity<PaginatedRecipes> getrecipepage(@RequestParam Integer page,@RequestParam Integer size, @RequestParam String title) {
-        PaginatedRecipes paginatedRecipes = (PaginatedRecipes) recipeService.page(page, size, title);
-        //return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
-        return ResponseEntity.ok(paginatedRecipes);
+        PaginatedRecipes paginatedRecipes = recipeService.page(page, size, title);
+        return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
     }
 
     @Override

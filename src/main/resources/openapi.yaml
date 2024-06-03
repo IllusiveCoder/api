@@ -169,16 +169,20 @@ components:
     PaginatedRecipes:
       type: object
       properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeShort'
+        currentpageNo:
+          type: integer
+        pagesize:
+          type: integer
         totalItems:
           type: integer
         totalPages:
           type: integer
-        currentPage:
-          type: integer
-        recipes:
-          type: array
-          items:
-            $ref: '#/components/schemas/RecipeShort'
+        islast:
+          type: boolean
 
 
 

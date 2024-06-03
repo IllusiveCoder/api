@@ -1,15 +1,19 @@
 package org.example.webapitableau.service;
 
+import org.example.webapitableau.models.PaginatedRecipes;
 import org.example.webapitableau.models.Recipe;
 import org.example.webapitableau.models.RecipeEntity;
 import org.example.webapitableau.Mapper.RecipeMapper;
+import org.example.webapitableau.models.RecipeShort;
 import org.example.webapitableau.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,10 +59,29 @@ public class RecipeService {
 
     }
 
-    public List<Recipe> page(Integer pageno, Integer pagesize,String title) {
+    public PaginatedRecipes page(@RequestParam Integer pageno, @RequestParam Integer pagesize, @RequestParam(required = false) String title) {
         Pageable pageable = PageRequest.of(pageno,pagesize);
-        Page<RecipeEntity> page = recipeRepository.findAll(pageable);
-        List<RecipeEntity> recipes = page.getContent();
-        return recipes.stream().map(p -> recipeMapper.toDto(p)).collect(Collectors.toList());
+        Page<RecipeEntity> recipeEntityPage = null;
+        List<RecipeEntity> recipeEntityList;
+        if(title.isEmpty())
+        {
+            recipeEntityPage = recipeRepository.findAll(pageable);
+            recipeEntityList = recipeEntityPage.getContent();
+        }
+        else{
+            Page<Recipe> recipePage = recipeRepository.findByTitleContaining(title, pageable);
+            recipeEntityList =  RecipeMapper.mapRecipesToRecipeEntities(recipePage.getContent());
+        }
+        List<RecipeShort> recipeShortList = RecipeMapper.mapRecipeEntitiesToRecipeShorts(recipeEntityList);
+
+        PaginatedRecipes paginatedRecipes = new PaginatedRecipes();
+        paginatedRecipes.setContent(recipeShortList);
+        paginatedRecipes.setCurrentpageNo(recipeEntityPage.getNumber());
+        paginatedRecipes.setPagesize(recipeEntityPage.getSize());
+        paginatedRecipes.setTotalItems((int) recipeEntityPage.getTotalElements());
+        paginatedRecipes.setTotalPages(recipeEntityPage.getTotalPages());
+        paginatedRecipes.setIslast(recipeEntityPage.isLast());
+
+        return paginatedRecipes;
     }
 }
