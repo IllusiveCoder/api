@@ -59,29 +59,37 @@ public class RecipeService {
 
     }
 
-    public PaginatedRecipes page(@RequestParam Integer pageno, @RequestParam Integer pagesize, @RequestParam(required = false) String title) {
-        Pageable pageable = PageRequest.of(pageno,pagesize);
-        Page<RecipeEntity> recipeEntityPage = null;
-        List<RecipeEntity> recipeEntityList;
+    public PaginatedRecipes page(@RequestParam Integer pageno, @RequestParam Integer pagesize, String title) {
         if(title.isEmpty())
         {
-            recipeEntityPage = recipeRepository.findAll(pageable);
+            Pageable pageable = PageRequest.of(pageno,pagesize);
+            Page<RecipeEntity> recipeEntityPage = recipeRepository.findAll(pageable);
+            List<RecipeEntity> recipeEntityList;
             recipeEntityList = recipeEntityPage.getContent();
+            List<RecipeShort> recipeShortList = RecipeMapper.mapRecipeEntitiesToRecipeShorts(recipeEntityList);
+            PaginatedRecipes paginatedRecipes = new PaginatedRecipes();
+            paginatedRecipes.setContent(recipeShortList);
+            paginatedRecipes.setCurrentpageNo(recipeEntityPage.getNumber());
+            paginatedRecipes.setPagesize(recipeEntityPage.getSize());
+            paginatedRecipes.setTotalItems((int) recipeEntityPage.getTotalElements());
+            paginatedRecipes.setTotalPages(recipeEntityPage.getTotalPages());
+            paginatedRecipes.setIslast(recipeEntityPage.isLast());
+            return paginatedRecipes;
         }
         else{
-            Page<Recipe> recipePage = recipeRepository.findByTitleContaining(title, pageable);
-            recipeEntityList =  RecipeMapper.mapRecipesToRecipeEntities(recipePage.getContent());
+            Pageable pageable = PageRequest.of(pageno,pagesize);
+            Page<RecipeEntity> recipeEntityPage = recipeRepository.findByTitleContaining(title,pageable);
+            List<RecipeEntity> recipeEntityList;
+            recipeEntityList = recipeEntityPage.getContent();
+            List<RecipeShort> recipeShortList = RecipeMapper.mapRecipeEntitiesToRecipeShorts(recipeEntityList);
+            PaginatedRecipes paginatedRecipes = new PaginatedRecipes();
+            paginatedRecipes.setContent(recipeShortList);
+            paginatedRecipes.setCurrentpageNo(recipeEntityPage.getNumber());
+            paginatedRecipes.setPagesize(recipeEntityPage.getSize());
+            paginatedRecipes.setTotalItems((int) recipeEntityPage.getTotalElements());
+            paginatedRecipes.setTotalPages(recipeEntityPage.getTotalPages());
+            paginatedRecipes.setIslast(recipeEntityPage.isLast());
+            return paginatedRecipes;
         }
-        List<RecipeShort> recipeShortList = RecipeMapper.mapRecipeEntitiesToRecipeShorts(recipeEntityList);
-
-        PaginatedRecipes paginatedRecipes = new PaginatedRecipes();
-        paginatedRecipes.setContent(recipeShortList);
-        paginatedRecipes.setCurrentpageNo(recipeEntityPage.getNumber());
-        paginatedRecipes.setPagesize(recipeEntityPage.getSize());
-        paginatedRecipes.setTotalItems((int) recipeEntityPage.getTotalElements());
-        paginatedRecipes.setTotalPages(recipeEntityPage.getTotalPages());
-        paginatedRecipes.setIslast(recipeEntityPage.isLast());
-
-        return paginatedRecipes;
     }
 }

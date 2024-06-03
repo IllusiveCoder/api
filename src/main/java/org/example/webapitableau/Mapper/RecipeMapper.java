@@ -16,7 +16,6 @@ public class RecipeMapper {
         if (dto == null) {
             return null;
         }
-
         RecipeEntity entity = new RecipeEntity();
         entity.setTitle(dto.getTitle());
         entity.setCreatedby(dto.getCreatedby());
