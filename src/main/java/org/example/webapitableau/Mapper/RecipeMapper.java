@@ -4,6 +4,8 @@ import org.example.webapitableau.models.Recipe;
 import org.example.webapitableau.models.RecipeEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class RecipeMapper {
 

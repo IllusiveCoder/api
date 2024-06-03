@@ -1,16 +1,18 @@
 package org.example.webapitableau.service;
 
-import org.example.webapitableau.models.PaginatedRecipes;
 import org.example.webapitableau.models.Recipe;
 import org.example.webapitableau.models.RecipeEntity;
 import org.example.webapitableau.Mapper.RecipeMapper;
 import org.example.webapitableau.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -22,12 +24,14 @@ public class RecipeService {
     private RecipeMapper recipeMapper;
 
     public Recipe getRecipe(Integer id) {
-        return (Recipe) recipeRepository.findAll(Pageable.ofSize(id));
+        RecipeEntity recipeEntity = (RecipeEntity) recipeRepository.getById(id);
+        return recipeMapper.toDto(recipeEntity);
     }
 
-    public void addRecipe(Recipe recipe) {
+    public String addRecipe(Recipe recipe) {
         RecipeEntity recipeEntity = recipeMapper.toEntity(recipe);
         recipeRepository.save(recipeEntity);
+        return "Recipe created";
     }
 
     public RecipeEntity updateRecipe(Integer id, Recipe updatedrecipe) {
@@ -51,8 +55,10 @@ public class RecipeService {
 
     }
 
-    public PaginatedRecipes page(String title) {
-        
-        return null;
+    public List<Recipe> page(Integer pageno, Integer pagesize,String title) {
+        Pageable pageable = PageRequest.of(pageno,pagesize);
+        Page<RecipeEntity> page = recipeRepository.findAll(pageable);
+        List<RecipeEntity> recipes = page.getContent();
+        return recipes.stream().map(p -> recipeMapper.toDto(p)).collect(Collectors.toList());
     }
 }
