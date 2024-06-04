@@ -17,11 +17,13 @@ public class RecipeMapper {
             return null;
         }
         RecipeEntity entity = new RecipeEntity();
+        entity.setId(Long.valueOf(dto.getId()));
         entity.setTitle(dto.getTitle());
         entity.setCreatedby(dto.getCreatedby());
         entity.setShortsummary(dto.getShortsummary());
         entity.setPreparation(dto.getPreparation());
         entity.setIngredients(dto.getIngredients());
+        entity.setBakingtime(Integer.valueOf(dto.getBakingtime()));
         entity.setPicture(dto.getPicture());
 
         return entity;
@@ -33,11 +35,13 @@ public class RecipeMapper {
         }
 
         Recipe dto = new Recipe();
+        dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setCreatedby(entity.getCreatedby());
         dto.setShortsummary(entity.getShortsummary());
         dto.setPreparation(entity.getPreparation());
         dto.setIngredients(entity.getIngredients());
+        dto.setBakingtime(Integer.valueOf(entity.getBakingtime()));
         dto.setPicture(entity.getPicture());
 
         return dto;

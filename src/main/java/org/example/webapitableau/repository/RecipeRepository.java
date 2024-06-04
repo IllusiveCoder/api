@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Integer> {
     Page<RecipeEntity> findByTitleContaining(String title, Pageable pageable);
+    Page<RecipeEntity> findByCreatedby(String uid, Pageable pageable);
 }
