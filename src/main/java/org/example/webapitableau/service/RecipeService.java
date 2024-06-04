@@ -29,7 +29,7 @@ public class RecipeService {
     }
 
     public String addRecipe(Recipe recipe) {
-        RecipeEntity recipeEntity = recipeMapper.toEntity(recipe);
+        RecipeEntity recipeEntity = recipeMapper.toEntity(recipe, recipeRepository.findAll().getLast().getId() + 1);
 
         recipeRepository.save(recipeEntity);
         return "Recipe created";
@@ -50,8 +50,7 @@ public class RecipeService {
                 })
                 .orElseGet(() -> {
                     Integer newid = recipeRepository.findAll().getLast().getId() + 1;
-                    updatedrecipe.setId(newid);
-                    RecipeEntity recipeEntity = recipeMapper.toEntity(updatedrecipe);
+                    RecipeEntity recipeEntity = recipeMapper.toEntity(updatedrecipe, newid);
                     return recipeRepository.save(recipeEntity);
                 });
 
