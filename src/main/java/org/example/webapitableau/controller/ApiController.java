@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @ComponentScan(basePackages = { "org.example.*" })
@@ -34,10 +33,9 @@ public class ApiController implements RecipeApi {
     }
 
     @Override
-    public ResponseEntity<PaginatedRecipes> getrecipepage(@RequestParam Integer page,@RequestParam Integer size, @RequestParam String title) {
-        PaginatedRecipes paginatedRecipes = (PaginatedRecipes) recipeService.page(page, size, title);
-        //return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
-        return ResponseEntity.ok(paginatedRecipes);
+    public ResponseEntity<PaginatedRecipes> getrecipepage(@RequestParam Integer page,@RequestParam Integer size, @RequestParam String title, @RequestParam String uid) {
+        PaginatedRecipes paginatedRecipes = recipeService.page(page, size, title, uid);
+        return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
     }
 
     @Override
@@ -49,6 +47,12 @@ public class ApiController implements RecipeApi {
     @Override
     public ResponseEntity<Void> putrecipe(@RequestParam Integer id,@RequestBody Recipe body) {
         recipeService.updateRecipe(id,body);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleterecipe(@RequestParam Integer recipeid, @RequestParam String uid) {
+        recipeService.deleterecipe(recipeid, uid);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

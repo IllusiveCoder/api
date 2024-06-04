@@ -1,9 +1,8 @@
 package org.example.webapitableau.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Arrays;
 
 @Entity
 public class RecipeEntity {
@@ -28,8 +27,8 @@ public class RecipeEntity {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Integer getId() {
+        return Math.toIntExact(id);
     }
 
     public void setId(Long id) {
