@@ -91,7 +91,6 @@ paths:
           required: true
           schema:
             type: integer
-
         - in: query
           name: uid
           description: Uid of user, who wants to delete a selected recipe.
@@ -120,14 +119,12 @@ paths:
           required: false
           schema:
             type: integer
-            default: 1
         - in: query
           name: size
           description: The number of items per page.
           required: false
           schema:
             type: integer
-            default: 10
         - in: query
           name: title
           description: A title or text someone is looking for.
@@ -147,6 +144,80 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedRecipes'
+  /favourites:
+    get:
+      summary: Get a list of all favourite recipes.
+      tags:
+        - getrecipedata
+      operationId: getfavouriterecipes
+      x-spring-paginated: true
+      parameters:
+        - in: query
+          name: uid
+          description: The uid of a user, to find favourite recipes.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of all favourite recipes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFavourites'
+    post:
+      summary: Get a list of all favourite recipes.
+      tags:
+        - getrecipedata
+      operationId: postfavouritrecipes
+      x-spring-paginated: true
+      parameters:
+        - in: query
+          name: uid
+          description: The uid of a user, to find favourite recipes.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: recipeid
+          description: The uid of a recipe.
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: List of all favourite recipes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFavourites'
+    delete:
+      summary: Get a list of all favourite recipes.
+      tags:
+        - getrecipedata
+      operationId: deleltefavouriterecipes
+      x-spring-paginated: true
+      parameters:
+        - in: query
+          name: uid
+          description: The uid of a user, to find favourite recipes.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: recipeid
+          description: The recipe page id of a recipe, what someone wants to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of all favourite recipes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFavourites'
 
 components:
   schemas:
@@ -212,6 +283,13 @@ components:
           type: integer
         islast:
           type: boolean
+    PaginatedFavourites:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeShort'
 
 
 

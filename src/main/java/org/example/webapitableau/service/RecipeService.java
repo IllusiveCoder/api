@@ -12,11 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -33,7 +29,7 @@ public class RecipeService {
     }
 
     public String addRecipe(Recipe recipe) {
-        RecipeEntity recipeEntity = recipeMapper.toEntity(recipe);
+        RecipeEntity recipeEntity = recipeMapper.toEntity(recipe, recipeRepository.findAll().getLast().getId() + 1);
 
         recipeRepository.save(recipeEntity);
         return "Recipe created";
@@ -53,8 +49,8 @@ public class RecipeService {
                     return recipeRepository.save(oldrecipe);
                 })
                 .orElseGet(() -> {
-                    updatedrecipe.setId(id);
-                    RecipeEntity recipeEntity = recipeMapper.toEntity(updatedrecipe);
+                    Integer newid = recipeRepository.findAll().getLast().getId() + 1;
+                    RecipeEntity recipeEntity = recipeMapper.toEntity(updatedrecipe, newid);
                     return recipeRepository.save(recipeEntity);
                 });
 
@@ -118,4 +114,5 @@ public class RecipeService {
         }
         return message;
     }
+
 }

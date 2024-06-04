@@ -12,12 +12,18 @@ import java.util.stream.Collectors;
 @Component
 public class RecipeMapper {
 
-    public RecipeEntity toEntity(Recipe dto) {
+    public RecipeEntity toEntity(Recipe dto, Integer id) {
         if (dto == null) {
             return null;
         }
         RecipeEntity entity = new RecipeEntity();
-        entity.setId(Long.valueOf(dto.getId()));
+        if (id != null) {
+            entity.setId(id.longValue());
+        }
+        else{
+            entity.setId(Long.valueOf(dto.getId()));
+        }
+
         entity.setTitle(dto.getTitle());
         entity.setCreatedby(dto.getCreatedby());
         entity.setShortsummary(dto.getShortsummary());

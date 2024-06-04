@@ -1,9 +1,13 @@
 package org.example.webapitableau.controller;
 
+import org.example.webapitableau.api.FavouritesApi;
 import org.example.webapitableau.api.RecipeApi;
+import org.example.webapitableau.models.PaginatedFavourites;
 import org.example.webapitableau.models.PaginatedRecipes;
 import org.example.webapitableau.models.Recipe;
+import org.example.webapitableau.repository.RecipeRepository;
 import org.example.webapitableau.service.RecipeService;
+import org.example.webapitableau.service.UserFavouritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,10 +23,14 @@ import java.util.List;
 @ComponentScan(basePackages = { "org.example.*" })
 @EntityScan("org.example.*")
 @Configuration
-public class ApiController implements RecipeApi {
+public class ApiController implements RecipeApi, FavouritesApi {
 
     @Autowired
     private RecipeService recipeService;
+    @Autowired
+    private UserFavouritesService userFavouritesService;
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @Override
     public ResponseEntity<List<Recipe>> getrecipe(@RequestParam Integer id) {
@@ -54,6 +62,24 @@ public class ApiController implements RecipeApi {
     public ResponseEntity<Void> deleterecipe(@RequestParam Integer recipeid, @RequestParam String uid) {
         recipeService.deleterecipe(recipeid, uid);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PaginatedFavourites> postfavouritrecipes(String uid, Integer recipeid) {
+        PaginatedFavourites paginatedFavourites = userFavouritesService.postfavourites(uid, recipeid);
+        return new ResponseEntity<>(paginatedFavourites, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PaginatedFavourites> deleltefavouriterecipes(String uid, Integer recipeid) {
+        PaginatedFavourites paginatedFavourites = userFavouritesService.deletefavourite(uid,recipeid);
+        return new ResponseEntity<>(paginatedFavourites, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PaginatedFavourites> getfavouriterecipes(String uid) {
+        PaginatedFavourites paginatedFavourites = userFavouritesService.getfavourites(uid);
+        return new ResponseEntity<>(paginatedFavourites, HttpStatus.OK);
     }
 }
 
