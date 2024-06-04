@@ -49,7 +49,8 @@ public class RecipeService {
                     return recipeRepository.save(oldrecipe);
                 })
                 .orElseGet(() -> {
-                    updatedrecipe.setId(id);
+                    Integer newid = recipeRepository.findAll().getLast().getId() + 1;
+                    updatedrecipe.setId(newid);
                     RecipeEntity recipeEntity = recipeMapper.toEntity(updatedrecipe);
                     return recipeRepository.save(recipeEntity);
                 });
