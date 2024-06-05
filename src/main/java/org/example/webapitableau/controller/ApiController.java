@@ -61,13 +61,15 @@ public class ApiController implements RecipeApi, FavouritesApi {
     }
 
     @Override
-    public ResponseEntity<PaginatedRecipes> getrecipepage(@RequestParam Integer page,@RequestParam Integer size, @RequestParam String title, @RequestParam String uid) {
+    public ResponseEntity<PaginatedRecipes> getrecipepage(@RequestParam Integer page,@RequestParam Integer size, @RequestParam String title, @RequestParam String uid, @RequestParam Boolean created) {
 
         try {
             firebaseAuth.getUser(uid);
         } catch (FirebaseAuthException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+
+        if (!created) uid = "";
 
         PaginatedRecipes paginatedRecipes = recipeService.page(page, size, title, uid);
         return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
