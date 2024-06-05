@@ -31,6 +31,12 @@ paths:
           required: true
           schema:
             type: integer
+        - in: query
+          name: uid
+          description: User-ID
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Search for specific recipe.
@@ -45,6 +51,13 @@ paths:
       tags:
         - postrecipedata
       operationId: postrecipe
+      parameters:
+        - in: query
+          name: uid
+          description: User-ID
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Add a new recipe.
         required: true
@@ -69,6 +82,12 @@ paths:
           required: true
           schema:
             type: integer
+        - in: query
+          name: uid
+          description: User-ID
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Add a new recipe.
         required: true
@@ -77,10 +96,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Recipe'
       responses:
-          '201':
-            description: Added recipe to the database.
-          '400':
-            description: Something went wrong.
+        '201':
+          description: Added recipe to the database.
+        '400':
+          description: Something went wrong.
     delete:
       description: Deletes a recipe by recipe id and user uid.
       operationId: deleterecipe
@@ -116,13 +135,13 @@ paths:
         - in: query
           name: page
           description: The page number to retrieve.
-          required: false
+          required: true
           schema:
             type: integer
         - in: query
           name: size
           description: The number of items per page.
-          required: false
+          required: true
           schema:
             type: integer
         - in: query
@@ -166,9 +185,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedFavourites'
     post:
-      summary: Get a list of all favourite recipes.
+      summary: Add a favourite to a User and get a list of all favourite recipes.
       tags:
-        - getrecipedata
+        - postrecipedata
       operationId: postfavouritrecipes
       x-spring-paginated: true
       parameters:
@@ -193,7 +212,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedFavourites'
     delete:
-      summary: Get a list of all favourite recipes.
+      summary: Delete a favourite of a User and get a list of all favourite recipes.
       tags:
         - getrecipedata
       operationId: deleltefavouriterecipes
@@ -241,16 +260,16 @@ components:
         picture:
           type: string
     RecipeShort:
-        type: object
-        properties:
-          id:
-            type: integer
-          title:
-            type: string
-          shortsummary:
-            type: string
-          picture:
-            type: string
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        shortsummary:
+          type: string
+        picture:
+          type: string
     User:
       type: object
       properties:
@@ -290,7 +309,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RecipeShort'
-
 
 
 
