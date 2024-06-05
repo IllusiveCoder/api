@@ -2,7 +2,7 @@ package org.example.webapitableau.controller;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.*;
 import org.example.webapitableau.api.FavouritesApi;
 import org.example.webapitableau.api.NotificationApi;
 import org.example.webapitableau.api.RecipeApi;
@@ -87,6 +87,25 @@ public class ApiController implements RecipeApi, FavouritesApi, NotificationApi 
         }
 
         recipeService.addRecipe(body);
+
+        Notification notification = Notification.builder()
+                .setTitle("Hallo von Api")
+                .setBody("Neues Rezept wurde erstellt: "+ body.getTitle())
+                .build();
+
+        // See documentation on defining a message payload.
+        MulticastMessage message = MulticastMessage.builder()
+                .addAllTokens(recipeService.getTokenMap().values())
+                .putData("id",String.valueOf(body.getId()))
+                .setNotification(notification)
+                .build();
+
+        try {
+            firebaseMessaging.sendMulticast(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
