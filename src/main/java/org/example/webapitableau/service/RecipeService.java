@@ -23,6 +23,10 @@ public class RecipeService {
     @Autowired
     private RecipeMapper recipeMapper;
 
+    public HashMap<String, String> getTokenMap() {
+        return tokenMap;
+    }
+
     public HashMap<String, String> tokenMap = new HashMap();
 
     public Recipe getRecipe(Integer id) {

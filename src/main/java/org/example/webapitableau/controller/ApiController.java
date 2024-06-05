@@ -2,7 +2,7 @@ package org.example.webapitableau.controller;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.*;
 import org.example.webapitableau.api.FavouritesApi;
 import org.example.webapitableau.api.NotificationApi;
 import org.example.webapitableau.api.RecipeApi;
@@ -87,13 +87,36 @@ public class ApiController implements RecipeApi, FavouritesApi, NotificationApi 
         try {
             try {
                 firebaseAuth.getUser(uid);
-                if(!uid.equals(body.getCreatedby())) throw new AuthenticationException();
-            } catch (FirebaseAuthException |AuthenticationException e) {
+                if (!uid.equals(body.getCreatedby())) throw new AuthenticationException();
+            } catch (FirebaseAuthException | AuthenticationException e) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
+
             recipeService.addRecipe(body);
-        } catch (Exception e) {
+
+            Notification notification = Notification.builder()
+                    .setTitle("Hallo von Api")
+                    .setBody("Neues Rezept wurde erstellt: " + body.getTitle())
+                    .build();
+
+            // See documentation on defining a message payload.
+            MulticastMessage message = MulticastMessage.builder()
+                    .addAllTokens(new ArrayList<>(recipeService.getTokenMap().keySet()))
+                    .putData("id", String.valueOf(body.getId()))
+                    .setNotification(notification)
+                    .build();
+            System.out.println(recipeService.getTokenMap().values());
+            try {
+                System.out.println("Message");
+                BatchResponse response = firebaseMessaging.sendMulticast(message);
+                System.out.println(response.getResponses());
+                System.out.println(response.getSuccessCount());
+                System.out.println(response.getFailureCount());
+            } catch (FirebaseMessagingException e) {
+                throw new RuntimeException(e);
+            }
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.status(HttpStatus.OK).build();
