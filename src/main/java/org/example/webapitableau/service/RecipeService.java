@@ -23,6 +23,8 @@ public class RecipeService {
     @Autowired
     private RecipeMapper recipeMapper;
 
+    public HashMap<String, String> tokenMap = new HashMap();
+
     public Recipe getRecipe(Integer id) {
         RecipeEntity recipeEntity = recipeRepository.getById(id);
         return recipeMapper.toDto(recipeEntity);
@@ -115,4 +117,8 @@ public class RecipeService {
         return message;
     }
 
+
+    public void postnotification(String uid, String token) {
+        tokenMap.put(uid, token);
+    }
 }

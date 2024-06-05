@@ -169,6 +169,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedRecipes'
+  /notification:
+    post:
+      summary: Sends a notification.
+      operationId: postnotification
+      parameters:
+        - in: query
+          name: uid
+          description: Uid of user.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: token
+          description: TOKEN.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
   /favourites:
     get:
       summary: Get a list of all favourite recipes.

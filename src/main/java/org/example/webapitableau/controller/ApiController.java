@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import org.example.webapitableau.api.FavouritesApi;
+import org.example.webapitableau.api.NotificationApi;
 import org.example.webapitableau.api.RecipeApi;
 import org.example.webapitableau.models.PaginatedFavourites;
 import org.example.webapitableau.models.PaginatedRecipes;
@@ -27,7 +28,7 @@ import java.util.List;
 @ComponentScan(basePackages = { "org.example.*" })
 @EntityScan("org.example.*")
 @Configuration
-public class ApiController implements RecipeApi, FavouritesApi {
+public class ApiController implements RecipeApi, FavouritesApi, NotificationApi {
 
     @Autowired
     private RecipeService recipeService;
@@ -146,6 +147,12 @@ public class ApiController implements RecipeApi, FavouritesApi {
         }
         PaginatedFavourites paginatedFavourites = userFavouritesService.getfavourites(uid);
         return new ResponseEntity<>(paginatedFavourites, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> postnotification(String uid, String token) {
+        recipeService.postnotification(uid,token);
+        return null;
     }
 }
 
