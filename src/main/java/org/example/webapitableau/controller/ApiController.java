@@ -92,34 +92,27 @@ public class ApiController implements RecipeApi, FavouritesApi, NotificationApi 
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
+        recipeService.addRecipe(body);
 
-            recipeService.addRecipe(body);
+        Notification notification = Notification.builder()
+                .setTitle("Hallo von Api")
+                .setBody("Neues Rezept wurde erstellt: "+ body.getTitle())
+                .build();
 
-            Notification notification = Notification.builder()
-                    .setTitle("Hallo von Api")
-                    .setBody("Neues Rezept wurde erstellt: " + body.getTitle())
-                    .build();
+        // See documentation on defining a message payload.
+        MulticastMessage message = MulticastMessage.builder()
+                .addAllTokens(recipeService.getTokenMap().values())
+                .putData("id",String.valueOf(body.getId()))
+                .setNotification(notification)
+                .build();
 
-            // See documentation on defining a message payload.
-            MulticastMessage message = MulticastMessage.builder()
-                    .addAllTokens(new ArrayList<>(recipeService.getTokenMap().keySet()))
-                    .putData("id", String.valueOf(body.getId()))
-                    .setNotification(notification)
-                    .build();
-            System.out.println(recipeService.getTokenMap().values());
-            try {
-                System.out.println("Message");
-                BatchResponse response = firebaseMessaging.sendMulticast(message);
-                System.out.println(response.getResponses());
-                System.out.println(response.getSuccessCount());
-                System.out.println(response.getFailureCount());
-            } catch (FirebaseMessagingException e) {
-                throw new RuntimeException(e);
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
+        try {
+            firebaseMessaging.sendMulticast(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override

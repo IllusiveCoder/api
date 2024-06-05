@@ -29,6 +29,8 @@ public class RecipeService {
 
     public HashMap<String, String> tokenMap = new HashMap();
 
+    public HashMap<String, String> getTokenMap() {return tokenMap;}
+
     public Recipe getRecipe(Integer id) {
         RecipeEntity recipeEntity = recipeRepository.getById(id);
         return recipeMapper.toDto(recipeEntity);
@@ -123,6 +125,6 @@ public class RecipeService {
 
 
     public void postnotification(String uid, String token) {
-        tokenMap.put(uid, token);
+        if (!tokenMap.containsKey(token)) tokenMap.put(token,uid);
     }
 }
