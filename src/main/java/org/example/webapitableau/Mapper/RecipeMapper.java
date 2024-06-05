@@ -59,6 +59,7 @@ public class RecipeMapper {
                     RecipeShort recipeShort = new RecipeShort();
                     recipeShort.setId(Math.toIntExact(recipe.getId()));
                     recipeShort.setTitle(recipe.getTitle());
+                    recipeShort.setBakingTime(recipe.getBakingtime());
                     recipeShort.setShortsummary(recipe.getShortsummary());
                     recipeShort.setPicture(recipe.getPicture());
                     return recipeShort;
@@ -74,6 +75,7 @@ public class RecipeMapper {
                     recipeShort.setTitle(recipeEntity.getTitle());
                     recipeShort.setShortsummary(recipeEntity.getShortsummary());
                     recipeShort.setPicture(recipeEntity.getPicture());
+                    recipeShort.setBakingTime(recipeEntity.getBakingtime());
                     return recipeShort;
                 })
                 .collect(Collectors.toList());

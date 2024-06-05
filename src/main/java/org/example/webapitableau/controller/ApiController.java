@@ -65,29 +65,38 @@ public class ApiController implements RecipeApi, FavouritesApi, NotificationApi 
     public ResponseEntity<PaginatedRecipes> getrecipepage(@RequestParam Integer page,@RequestParam Integer size, @RequestParam String title, @RequestParam String uid, @RequestParam Boolean created) {
 
         try {
-            firebaseAuth.getUser(uid);
-        } catch (FirebaseAuthException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            try {
+                firebaseAuth.getUser(uid);
+            } catch (FirebaseAuthException e) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            if (!created) uid = "";
+            if (page < 0) page = 0;
+            PaginatedRecipes paginatedRecipes = recipeService.page(page, size, title, uid);
+            return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if (!created) uid = "";
-
-        PaginatedRecipes paginatedRecipes = recipeService.page(page, size, title, uid);
-        return new ResponseEntity<>(paginatedRecipes, HttpStatus.OK);
+        return null;
     }
 
     @Override
-    public ResponseEntity<Void> postrecipe(@RequestParam String uid,@RequestParam Recipe body) {
+    public ResponseEntity<Void> postrecipe(@RequestParam String uid,@RequestBody Recipe body) {
 
         try {
-            firebaseAuth.getUser(uid);
-            if(uid != body.getCreatedby()) throw new AuthenticationException();
-        } catch (FirebaseAuthException |AuthenticationException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+            try {
+                firebaseAuth.getUser(uid);
+                if(!uid.equals(body.getCreatedby())) throw new AuthenticationException();
+            } catch (FirebaseAuthException |AuthenticationException e) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
 
-        recipeService.addRecipe(body);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            recipeService.addRecipe(body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
@@ -95,7 +104,7 @@ public class ApiController implements RecipeApi, FavouritesApi, NotificationApi 
 
         try {
             firebaseAuth.getUser(uid);
-            if(uid != body.getCreatedby()) throw new AuthenticationException();
+            if(!uid.equals(body.getCreatedby())) throw new AuthenticationException();
         } catch (FirebaseAuthException |AuthenticationException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -129,6 +138,9 @@ public class ApiController implements RecipeApi, FavouritesApi, NotificationApi 
 
     @Override
     public ResponseEntity<PaginatedFavourites> deleltefavouriterecipes(String uid, Integer recipeid) {
+
+        System.out.println(uid);
+
         try {
             firebaseAuth.getUser(uid);
         } catch (FirebaseAuthException e) {
