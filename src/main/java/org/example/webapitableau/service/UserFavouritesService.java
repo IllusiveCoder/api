@@ -39,7 +39,11 @@ public class UserFavouritesService {
     }
 
     public PaginatedFavourites getfavourites(String uid) {
-
+        if (!hashMap.containsKey(uid)) {
+            List<RecipeShort> recipeList = new ArrayList<>();
+            PaginatedFavourites pf = new PaginatedFavourites();
+            pf.setContent(recipeList);
+            return pf;}
         List<Integer> favourites = hashMap.get(uid);
         List<Recipe> recipeList = new ArrayList<>();
         for (Integer favourite : favourites) {
